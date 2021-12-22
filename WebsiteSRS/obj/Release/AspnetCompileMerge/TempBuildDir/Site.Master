@@ -1,0 +1,153 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebsiteSRS.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - My ASP.NET Application</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <link href="../Content/BubbleHelp.css" rel="stylesheet" />
+    <link href="../Content/ContentPage.css" rel="stylesheet" />
+    <link href="../Content/ListPage.css" rel="stylesheet" />
+    <script src="Scripts/jquery-3.4.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <style>
+        #editiFrame {
+            width:100%;
+            height:95%;
+            overflow:auto;
+            float:left;
+        }
+    </style>
+    <script type="text/javascript">
+        var arg = "&appID=SIC&modelID=Pages&userID=mif&userRole=Teacher&schoolYear=20212022&schoolCode=0209";
+       $(document).ready(function () {        
+
+            $("#Feedback").click(function (event) {
+                OpenForm("Feedback","FeedbackForm.aspx",arg,"500","700");
+            });
+
+            $("#AccessPromission").click(function (event) {
+                OpenForm("Access Permission", "AccessPermission.aspx", arg, "500", "700");
+            });
+
+            $("#ClassMatch").click(function (event) {
+                OpenForm("Class Match", "ClassMatchForm.aspx", arg, "500", "700");
+            });
+
+           $("#closeMe").click(function (event) {
+               $("#EditDIV").hide();
+           });
+           
+        });
+
+        function OpenForm(title, page, arg, pHeight, pWidth) {
+            var pTop = 150;
+            var pLeft = 150;
+           // alert("Test - " + title + " " + page);
+            var goPage = "Forms/Loading.aspx?pID=" + page + arg
+
+            try {
+
+                $("#editiFrame").attr('src', goPage);
+                $("#EditTitle").html(title);
+                $("#EditDIV").css({
+                    top: pTop,
+                    left: pLeft,
+                    height: pHeight ,
+                    width: pWidth 
+                });
+               $("#EditDIV").fadeToggle("fast");
+              //  $("#EditDIV").show(); // .removeClass("epahide");
+
+         //       alert("arg - " + arg );
+
+            }
+
+
+            catch (e) {
+                window.alert("Error:" + e.mess);
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" runat="server" href="~/">Application name</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a runat="server" href="~/">Home</a></li>
+                        <li><a runat="server" href="~/About">About</a></li>
+                        <li><a runat="server" href="~/Contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container body-content" style="z-index:-1;">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer>
+                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
+            </footer>
+        </div>
+
+        <div id="HelpDIV" class="bubble epahide">
+            <asp:TextBox ID="HelpTextContent" runat="server" TextMode="MultiLine" CssClass="HelpTextBox" BackColor="transparent"></asp:TextBox>
+        </div>
+        <div id="PopUpDIV" class="bubble epahide"></div>
+
+        <div id="EditDIV" runat="server" class="EditDIV bubble epahide"  >
+            <div class="EditDIV-Header">
+                <div id="EditTitle" class="EditDIV-Header-Title"></div>
+                <div class="EditDIV-Header-Close">
+                    <img id="closeMe" class="EditDIV-Header-Close-Img" src="Content/images/close.png" />
+                </div>
+            </div>
+
+            <iframe class="EditPage" id="editiFrame" name="editiFrame" frameborder="0" scrolling="no" src="" runat="server"></iframe>
+        </div>
+
+    </form>
+
+</body>
+</html>
